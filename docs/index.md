@@ -1,8 +1,12 @@
-## Welcome to GitHub Pages
+## ESP32 with Tensorflow Lite and Teachable Machine
 
-You can use the [editor on GitHub](https://github.com/sljm12/esp32_tensorflowlite/edit/main/docs/index.md) to maintain and preview the content for your website in Markdown files.
+This repository is to help you to use ESP32 as the deployment platform for Tensorflow Lite.
 
-Whenever you commit to this repository, GitHub Pages will run [Jekyll](https://jekyllrb.com/) to rebuild the pages in your site, from the content in your Markdown files.
+We will use the doorbell example together with an AI Thinker ESP32-CAM board as the target.
+
+First you will need to follow the instructions on https://blog.tensorflow.org/2020/08/announcing-tensorflow-lite-micro-esp32.html in order to setup your environment as well as compile ad build the sample doorbell example.
+
+Once that is done, we can use Teachable machine https://teachablemachine.withgoogle.com/ to train a custom model and modify the example code to use our custom model.
 
 ### Markdown
 
