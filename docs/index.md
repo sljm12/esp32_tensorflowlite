@@ -126,4 +126,4 @@ add the following at the end of the header section
 ### Other Changes
 
 #### detection_responder.cc
-You will probably need to modify this file to do what you need to do and also the scores to pass in if you have more classes instead of just 2.
+You will probably need to modify this file to do whatever u want when the score passes the threshold and also the scores to pass in if you have more classes instead of just 2.
