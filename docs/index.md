@@ -10,9 +10,11 @@ First you will need to follow the instructions on [Tensorflow Blog](https://blog
 make -f tensorflow/lite/micro/tools/make/Makefile TARGET=esp generate_doorbell_camera_esp_project  
 ```
 
-For some reason it is a known [issue](https://github.com/tensorflow/tensorflow/issues/37431) that the detection_responder.cc file might be empty when you run it for the first time. 
+It is a known [issue](https://github.com/tensorflow/tensorflow/issues/37431) that the detection_responder.cc file might be empty when you run it for the first time. 
 
 Once that is done, we can use [Teachable machine](https://teachablemachine.withgoogle.com/) to train a custom model and modify the example code to use our custom model.
+
+I have added links to the commits in order for you to see the changes I have made to the source files.
 
 This set of codes has been tested to work with ESP-IDF v4.3.
 
@@ -30,7 +32,7 @@ You need to train a new custom model. One of the easiest way is to use Teachable
 ![Export Model](images/Screenshot_5.png)
 
 ### Processing the zip file
-Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite/commit/fbbf48627e3b86008f30a9efb66a557e7b16a856](https://github.com/sljm12/esp32_tensorflowlite/commit/fbbf48627e3b86008f30a9efb66a557e7b16a856)
+Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite_teachable_machine/commit/fbbf48627e3b86008f30a9efb66a557e7b16a856](https://github.com/sljm12/esp32_tensorflowlite_teachable_machine/commit/fbbf48627e3b86008f30a9efb66a557e7b16a856)
 
 1. Unzip the zip file (converted_tinyml.zip)
 2. Look for the following 3 files 
@@ -41,7 +43,7 @@ Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite/commit/
 4. Copy the 3 files to **main** directory in the sample doorbell app replacing the same 3 files there.
 
 ### Modifying the micro_ops_resolver
-Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f](https://github.com/sljm12/esp32_tensorflowlite/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f).
+Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite_teachable_machine/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f](https://github.com/sljm12/esp32_tensorflowlite_teachable_machine/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f).
 
 We will need to modify the **micro_op_resolver portion** in **main_functions.cc** to add in the kernals that are used in the Teachable Machine model. For more information you can read the docs [here](https://www.tensorflow.org/lite/guide/ops_version#change_kernel_registration). The kernals are bascially the various layers/operations that are used in your model, so if you are using a custom model you will need to find all the operations that your model use and put it here. The following is the one that is used in the Teachable Machine Image classification model.
 
@@ -85,7 +87,7 @@ micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_SOFTMAX,
 ```
 
 ### Change Tensor Arena size
-Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f](https://github.com/sljm12/esp32_tensorflowlite/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f).
+Check out the changes at [https://github.com/sljm12/esp32_tensorflowlite_teachable_machine/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f](https://github.com/sljm12/esp32_tensorflowlite_teachable_machine/commit/4da8042e899d05e4f31248dbd12432f6bab7bf9f).
 
 If you do an idf.py build followed by a flash and monitor you might see this error message **"Arena size is too small for activation buffers. Needed 55296 but only 40864 was available.AllocateTensors() failed"** and ur esp goes into an inifite reboot.
 
