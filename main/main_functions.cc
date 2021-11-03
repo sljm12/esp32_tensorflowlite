@@ -26,6 +26,8 @@ limitations under the License.
 #include "tensorflow/lite/schema/schema_generated.h"
 #include "tensorflow/lite/version.h"
 
+#include <esp_heap_caps.h>
+
 // Globals, used for compatibility with Arduino-style sketches.
 namespace {
 tflite::ErrorReporter* error_reporter = nullptr;
@@ -34,8 +36,9 @@ tflite::MicroInterpreter* interpreter = nullptr;
 TfLiteTensor* input = nullptr;
 
 // An area of memory to use for input, output, and intermediate arrays.
-constexpr int kTensorArenaSize = 93 * 1024;
-static uint8_t tensor_arena[kTensorArenaSize];
+constexpr int kTensorArenaSize = 1* 1024 * 1024;
+//static uint8_t tensor_arena[kTensorArenaSize];
+static uint8_t* tensor_arena = (uint8_t*) heap_caps_calloc(kTensorArenaSize, 1, MALLOC_CAP_SPIRAM);// Using PSRAM for the tensor_areana
 }  // namespace
 
 // The name of this function is important for Arduino compatibility.
@@ -65,7 +68,7 @@ void setup() {
   //
   // tflite::AllOpsResolver resolver;
   // NOLINTNEXTLINE(runtime-global-variables)
-  static tflite::MicroMutableOpResolver<3> micro_op_resolver;
+  static tflite::MicroMutableOpResolver<6> micro_op_resolver;
   micro_op_resolver.AddBuiltin(
       tflite::BuiltinOperator_DEPTHWISE_CONV_2D,
       tflite::ops::micro::Register_DEPTHWISE_CONV_2D());
@@ -73,6 +76,14 @@ void setup() {
                                tflite::ops::micro::Register_CONV_2D());
   micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_AVERAGE_POOL_2D,
                                tflite::ops::micro::Register_AVERAGE_POOL_2D());
+	micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_FULLY_CONNECTED, 
+                             tflite::ops::micro::Register_FULLY_CONNECTED()); 
+
+micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_RESHAPE, 
+                             tflite::ops::micro::Register_RESHAPE()); 
+
+micro_op_resolver.AddBuiltin(tflite::BuiltinOperator_SOFTMAX, 
+                             tflite::ops::micro::Register_SOFTMAX());
 
   // Build an interpreter to run the model with.
   static tflite::MicroInterpreter static_interpreter(
