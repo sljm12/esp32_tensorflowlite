@@ -1,7 +1,16 @@
-## ESP32 with Tensorflow Lite and Teachable Machine
+## Image Classification with ESP32, Tensorflow Lite and Teachable Machine
 
-This repository is to help you to use ESP32 as the deployment platform for Tensorflow Lite.
+This repository is to help you to use ESP32 specifically the AI Thinker ESP32-Cam board as the deployment platform for Tensorflow Lite and Image Classification models from Teachable Machine.
 
+The docs below document the steps that I have done to make it work. You can just clone this repository if you just want to use it as a baseline. 
+
+I have added links to the commits in order for you to see the changes I have made to the source files in order to make it load a custom Teachable Machine model.
+
+Assumptions:
+1. You know simple esp-idf tools commands like idf.py build, idf.py menuconfig, idf.py flash, monitor etc.
+2. You have a camera board that is supported by the esp32-camera repo.
+
+### Setting up and generating the project files.
 We will use the doorbell example together with an AI Thinker ESP32-CAM board as the target.
 
 First you will need to follow the instructions on [Tensorflow Blog](https://blog.tensorflow.org/2020/08/announcing-tensorflow-lite-micro-esp32.html) in order to setup your environment as well as compile ad build the sample doorbell example. If for some reason you can't build check the **detection_responder.cc** file and make sure it is not empty. If its empty regenerate the files again using
@@ -12,9 +21,12 @@ make -f tensorflow/lite/micro/tools/make/Makefile TARGET=esp generate_doorbell_c
 
 It is a known [issue](https://github.com/tensorflow/tensorflow/issues/37431) that the detection_responder.cc file might be empty when you run it for the first time. 
 
+We can configure the board to use AI Thinker Camera Pins by using **idy.py menuconfig**
+
+Remember to read the instructions in the [esp32-camera github](https://github.com/espressif/esp32-camera) on copying the Kconfig into your main directory of your esp idf project if not you can't select the camera pins of your board. 
+
 Once that is done, we can use [Teachable machine](https://teachablemachine.withgoogle.com/) to train a custom model and modify the example code to use our custom model.
 
-I have added links to the commits in order for you to see the changes I have made to the source files.
 
 This set of codes has been tested to work with ESP-IDF v4.3.
 
